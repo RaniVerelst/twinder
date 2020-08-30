@@ -1,9 +1,17 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
-const passportLocalMongoose = require('passport-local-mongoose');
+const mongoose = require("mongoose");
 
-const User = new Schema({});
+mongoose.connect("mongodb://localhost:27017/twinder", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+});
 
-User.plugin(passportLocalMongoose);
+var userSchema = mongoose.Schema({
+    uid: String,
+    token: String,
+    email: String,
+    name: String,
+    birthday: String,
+    pic: String
+});
 
-module.exports = mongoose.model('User', User);
+module.exports = mongoose.model('User', userSchema);

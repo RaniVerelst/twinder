@@ -1,19 +1,20 @@
 const express = require('express')
-
 const app = express()
-
 const passport = require('passport')
-
 const session = require('express-session')
-
 const User = require('./models/User')
-
 const facebookStrategy = require('passport-facebook').Strategy
 
 app.set("view engine", "ejs")
 app.use(session({ secret: 'ilovescotchscotchyscotchscotch' }));
 app.use(passport.initialize());
 app.use(passport.session());
+
+if (typeof localStorage === "undefined" || localStorage === null) {
+  var LocalStorage = require('node-localstorage').LocalStorage;
+  localStorage = new LocalStorage('./scratch');
+}
+
 
 passport.use(new facebookStrategy({
 
@@ -52,20 +53,22 @@ passport.use(new facebookStrategy({
           newUser.email = profile.emails[0].value; // facebook can return multiple emails so we'll take the first
           newUser.pic = profile.photos[0].value;
           newUser.pic = profile.photos[0].value;
-          console.log("log1", profile._json.birthday);
           newUser.birthday = profile._json.birthday;
-          console.log("log2", newUser.birthday);
-          console.log("log3", typeof profile._json.birthday);
 
 
 
           // save our user to the database
           newUser.save(function (err) {
-            if (err)
+            if (err) {
               throw err;
 
+            } else {
+
+              return done(null, newUser);
+
+
+            }
             // if successful, return the new user
-            return done(null, newUser);
 
           });
 
@@ -73,14 +76,26 @@ passport.use(new facebookStrategy({
 
       });
 
-
     })
 
-
     const birthday = profile._json.birthday;
-    console.log(birthday);
+    const currentUser = profile._json.id;
+
+
+
+    localStorage.setItem('user', currentUser);
+
+
+
 
   }));
+
+//find birthday
+console.log(localStorage.getItem('user'));
+
+
+let urlRederect = "/birthday"
+// + birthday;
 
 
 passport.serializeUser(function (user, done) {
@@ -94,13 +109,6 @@ passport.deserializeUser(function (id, done) {
   });
 });
 
-app.get('/profile', isLoggedIn, function (req, res) {
-  res.render('profile', {
-    user: req.user // get the user out of session and pass to template
-  });
-
-});
-
 app.get('/logout', function (req, res) {
   req.logout();
   res.redirect('/');
@@ -111,9 +119,11 @@ function isLoggedIn(req, res, next) {
 
   // if user is authenticated in the session, carry on
   if (req.isAuthenticated())
-    return next();
+
+    res.redirect("/birthday/" + date);
 
   // if they aren't redirect them to the home page
+
   res.redirect('/');
 }
 
@@ -121,7 +131,7 @@ app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email', '
 
 app.get('/facebook/callback',
   passport.authenticate('facebook', {
-    successRedirect: '/profile',
+    successRedirect: urlRederect,
     failureRedirect: '/'
   }));
 

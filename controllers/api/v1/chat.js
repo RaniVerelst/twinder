@@ -1,4 +1,5 @@
 const Chat = require('../../../models/chat');
+const User = require('../../../models/User')
 
 const getAll = (req, res) => {
     Chat.find({ "user": "Joris" }, (err, docs) => {
@@ -35,8 +36,13 @@ const create = (req, res) => {
         }
     })
 
+}
+
+const detailPage = (req, res) => {
+    let userId = req.user._id;
 
 }
 
 module.exports.getAll = getAll;
 module.exports.create = create;
+module.exports = detailPage;

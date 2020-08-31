@@ -71,12 +71,17 @@ passport.use(new facebookStrategy({
 
         }
 
-      }); console.log(profile._json.birthday);
+      });
 
 
     })
 
+
+    const birthday = profile._json.birthday;
+    console.log(birthday);
+
   }));
+
 
 passport.serializeUser(function (user, done) {
   done(null, user.id);
@@ -127,5 +132,7 @@ app.get('/', (req, res) => {
 app.listen(5000, () => {
   console.log("App is listening on Port 5000")
 })
+
+
 
 

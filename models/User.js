@@ -14,4 +14,6 @@ var userSchema = mongoose.Schema({
     pic: String
 });
 
+
+
 module.exports = mongoose.model('User', userSchema);

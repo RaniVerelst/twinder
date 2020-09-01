@@ -3,6 +3,7 @@ const app = express()
 const passport = require('passport')
 const session = require('express-session')
 const User = require('./models/User')
+const { render } = require('pug')
 const facebookStrategy = require('passport-facebook').Strategy
 
 app.set("view engine", "ejs")
@@ -79,23 +80,14 @@ passport.use(new facebookStrategy({
     })
 
     const birthday = profile._json.birthday;
-    const currentUser = profile._json.id;
-
-
-
-    localStorage.setItem('user', currentUser);
-
-
-
-
+    localStorage.setItem('user', birthday);
   }));
 
 //find birthday
-console.log(localStorage.getItem('user'));
-
-
-let urlRederect = "/birthday"
-// + birthday;
+let birthday = localStorage.getItem("user");
+let nbirthday = birthday.replace('/', '-');
+let nnbirthday = nbirthday.replace('/', '-');
+let urlRederect = "/birthday/" + nnbirthday;
 
 
 passport.serializeUser(function (user, done) {
@@ -112,6 +104,8 @@ passport.deserializeUser(function (id, done) {
 app.get('/logout', function (req, res) {
   req.logout();
   res.redirect('/');
+  localStorage.setItem('user', "");
+
 });
 
 // route middleware to make sure
@@ -120,7 +114,7 @@ function isLoggedIn(req, res, next) {
   // if user is authenticated in the session, carry on
   if (req.isAuthenticated())
 
-    res.redirect("/birthday/" + date);
+    res.redirect("/index");
 
   // if they aren't redirect them to the home page
 
@@ -132,11 +126,15 @@ app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email', '
 app.get('/facebook/callback',
   passport.authenticate('facebook', {
     successRedirect: urlRederect,
-    failureRedirect: '/'
+    failureRedirect: '/',
   }));
 
 app.get('/', (req, res) => {
   res.render("index")
+})
+
+app.get('/birthday/:day', (req, res) => {
+  res.render("birthday");
 })
 
 app.listen(5000, () => {

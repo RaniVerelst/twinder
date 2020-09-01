@@ -1,28 +1,31 @@
-<!-- views/index.ejs -->
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
-	<title>Node Authentication</title>
-	<style>
-		body {
-			padding-top: 80px;
-		}
-	</style>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="../public/stylesheets/home.css">
+	<title>Login</title>
 </head>
 
 <body>
-	<div class="container">
+	<!--Logo-->
+	<a class="logo" href="index.php"><img src="logo.png" alt="Logo"></a>
+	<!---Login formulier-->
+	<form class="form" action="" method="POST">
+		<h2 class="form__title">Login</h2>
+		<h5 class="form__text"> Chat with people who where born on the same day as you.</h5>
 
-		<div class="jumbotron text-center">
-			<h1><span class="fa fa-lock"></span> Node Authentication</h1>
+		<!--Error melding-->
+		<div class="form__error form__error--hidden" style="color:rgb(255, 91, 113);"></div>
 
-			<p>Login or Register with:</p>
+		<!--Login button-->
+		<a href="/auth/facebook" class="btn btn-primary"><span class="fa fa-facebook"></span> Facebook</a>
 
-			<a href="/auth/facebook" class="btn btn-primary"><span class="fa fa-facebook"></span> Facebook</a>
-		</div>
+	</form>
 
-	</div>
 </body>
+
+</html>
 
 </html>

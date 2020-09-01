@@ -141,6 +141,9 @@ app.listen(5000, () => {
   console.log("App is listening on Port 5000")
 })
 
+app.use(express.static("public"));
+
+
 
 
 
